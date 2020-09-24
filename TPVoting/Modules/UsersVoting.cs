@@ -73,7 +73,7 @@ namespace Mordrog
 
         public bool CheckIfHalfOrMoreVoted()
         {
-            return usersVotes.Count(kv => kv.Value == true) >= UnityEngine.Mathf.CeilToInt(usersVotes.Count / 2);
+            return usersVotes.Count(kv => kv.Value == true) >= UnityEngine.Mathf.CeilToInt((float)usersVotes.Count / 2);
         }
     }
 }
