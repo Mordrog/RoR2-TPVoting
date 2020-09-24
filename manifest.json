@@ -1,6 +1,6 @@
 {
     "name": "TPVoting",
-    "version_number": "1.0.0",
+    "version_number": "1.0.1",
     "website_url": "https://github.com/Mordrog/RoR2-TPVoting",
     "description": "The mod should provide a voting system for teleporter in your games.",
     "dependencies": [

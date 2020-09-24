@@ -13,3 +13,7 @@ Mod will lock players from starting teleporter until voting is passed. To preven
 ### Additional infos
 
 Mod will not work on portals (might be updated in future)
+
+### Changelog
+#### 1.0.1
+- Fixed checking for majority of players
