@@ -10,6 +10,11 @@ namespace Mordrog
         {
             "bazaar",
             "arena", //void
+            "goldshores",
+            "moon",
+            "artifactworld",
+            "mysteryspace",
+            "limbo",
         };
     }
 }
