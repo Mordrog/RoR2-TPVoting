@@ -80,7 +80,7 @@ namespace Mordrog
         {
             orig(self, body);
 
-            if (self.IsDeadAndOutOfLivesServer())
+            if (self.IsDeadAndOutOfLivesServer() && CheckIfCurrentStageQualifyForTPVoting())
             {
                 var user = UsersHelper.GetUser(self);
 
