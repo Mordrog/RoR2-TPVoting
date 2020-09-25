@@ -15,5 +15,9 @@ Mod will lock players from starting teleporter until voting is passed. To preven
 Mod will not work on portals (might be updated in future)
 
 ### Changelog
+#### 1.0.2
+- Included all stages without TP to ignored map list
+- Fixed activating on interaction items when trying to start locked TP, which made fireworks and squids an actually usefull items. No more.
+- Fixed players voting on death on disabled stages
 #### 1.0.1
 - Fixed checking for majority of players
