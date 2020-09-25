@@ -8,6 +8,7 @@ namespace Mordrog
         private UsersTPVotingController usersTPVotingController;
 
         public bool IsTPUnlocked = false;
+        public bool WasTPInteractedOnceBeforeUnlock = false;
 
         public void Awake()
         {
@@ -17,6 +18,7 @@ namespace Mordrog
             usersTPVotingController.OnTPVotingFinish += UsersTPVotingController_OnTPVotingEnd;
 
             On.RoR2.TeleporterInteraction.OnInteractionBegin += TeleporterInteraction_OnInteractionBegin;
+            On.RoR2.TeleporterInteraction.GetInteractability += TeleporterInteraction_GetInteractability;
         }
 
         private void UsersTPVotingController_OnTPVotingRestart()
@@ -38,6 +40,19 @@ namespace Mordrog
         public void LockTP()
         {
             IsTPUnlocked = false;
+            WasTPInteractedOnceBeforeUnlock = false;
+        }
+
+        private Interactability TeleporterInteraction_GetInteractability(On.RoR2.TeleporterInteraction.orig_GetInteractability orig, TeleporterInteraction self, Interactor activator)
+        {
+            if (!WasTPInteractedOnceBeforeUnlock || IsTPUnlocked)
+            {
+                return orig(self, activator);
+            }
+            else
+            {
+                return Interactability.ConditionsNotMet;
+            }
         }
 
         private void TeleporterInteraction_OnInteractionBegin(On.RoR2.TeleporterInteraction.orig_OnInteractionBegin orig, RoR2.TeleporterInteraction self, RoR2.Interactor activator)
@@ -48,6 +63,7 @@ namespace Mordrog
             }
             else
             {
+                WasTPInteractedOnceBeforeUnlock = true;
                 ChatHelper.PlayersNotReady();
             }
         }
