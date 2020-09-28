@@ -8,5 +8,10 @@ namespace Mordrog
         {
             return RoR2.NetworkUser.readOnlyInstancesList.FirstOrDefault(u => u.master == player);
         }
+
+        public static bool IsOneUserOnly()
+        {
+            return RoR2.NetworkUser.readOnlyInstancesList.Count <= 1;
+        }
     }
 }
