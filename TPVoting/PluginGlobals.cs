@@ -8,13 +8,17 @@ namespace Mordrog
         //Lol is there better way to store/check stages?!?
         public static List<string> IgnoredStages = new List<string>
         {
-            "bazaar",
             "arena", //void
-            "goldshores",
             "moon",
+            "limbo",
+        };
+
+        public static List<string> PortalOnlyStages = new List<string>
+        {
+            "bazaar",
+            "goldshores",
             "artifactworld",
             "mysteryspace",
-            "limbo",
         };
     }
 }

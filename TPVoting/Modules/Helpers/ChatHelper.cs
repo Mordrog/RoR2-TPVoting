@@ -36,7 +36,7 @@
             }
         }
 
-        public static void StartMessage()
+        public static void VotingInstruction()
         {
             if (!UsersHelper.IsOneUserOnly())
             {

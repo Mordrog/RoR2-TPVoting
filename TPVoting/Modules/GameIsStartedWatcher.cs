@@ -5,30 +5,23 @@ namespace Mordrog
 {
     class GameIsStartedWatcher : NetworkBehaviour
     {
-        private Timer showStartMessageTimer;
+        private Timer showInstructionMessageTimer;
 
         public bool GameIsStarted { get; private set; }
 
         public void Awake()
         {
-            showStartMessageTimer = base.gameObject.AddComponent<Timer>();
+            showInstructionMessageTimer = base.gameObject.AddComponent<Timer>();
 
-            showStartMessageTimer.OnTimerEnd += ShowStartMessageTimer_OnTimerEnd;
+            showInstructionMessageTimer.OnTimerEnd += ShowInstructionMessageTimer_OnTimerEnd;
 
             On.RoR2.Run.Start += Run_Start;
             On.RoR2.Run.OnDestroy += Run_OnDestroy; ;
         }
 
-        private void Run_OnDestroy(On.RoR2.Run.orig_OnDestroy orig, Run self)
+        private void ShowInstructionMessageTimer_OnTimerEnd()
         {
-            orig(self);
-
-            GameIsStarted = false;
-        }
-
-        private void ShowStartMessageTimer_OnTimerEnd()
-        {
-            ChatHelper.StartMessage();
+            ChatHelper.VotingInstruction();
         }
 
         private void Run_Start(On.RoR2.Run.orig_Start orig, Run self)
@@ -36,7 +29,14 @@ namespace Mordrog
             orig(self);
 
             GameIsStarted = true;
-            showStartMessageTimer.StartTimer(5);
+            showInstructionMessageTimer.StartTimer(5);
+        }
+
+        private void Run_OnDestroy(On.RoR2.Run.orig_OnDestroy orig, Run self)
+        {
+            orig(self);
+
+            GameIsStarted = false;
         }
     }
 }

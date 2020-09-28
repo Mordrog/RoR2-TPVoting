@@ -70,7 +70,7 @@ namespace Mordrog
             majorityTPVotingTimer.Reset();
             usersTPVoting.ResetVoting(NetworkUser.readOnlyInstancesList);
 
-            if (usersTPVoting.CheckIfOnlyOneUserLeft())
+            if (usersTPVoting.CheckIfOnlyOneUserLeft() || !CheckIfCurrentStageQualifyForTPVoting())
                 usersTPVoting.SetAllUsersVote();
             else
                 OnTPVotingRestart?.Invoke();
@@ -100,8 +100,7 @@ namespace Mordrog
 
         private void Chat_SendBroadcastChat_ChatMessageBase(On.RoR2.Chat.orig_SendBroadcastChat_ChatMessageBase orig, RoR2.Chat.ChatMessageBase message)
         {
-            if (!gameIsStartedWatcher.GameIsStarted ||
-                !CheckIfCurrentStageQualifyForTPVoting())
+            if (!gameIsStartedWatcher.GameIsStarted)
             {
                 orig(message);
                 return;
