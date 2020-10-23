@@ -12,6 +12,9 @@ NOW WORKS WITH PORTALS! (void is intentionally excluded)
 | PlayerIsReadyMessages         |       "r,rdy,ready" |
 | MajorityVotesCountdownTime    |                  30 |
 
+## More
+
+Find my other mods here: https://thunderstore.io/package/Mordrog/
 
 ### Changelog
 #### 1.1.0
