@@ -10,6 +10,7 @@ namespace Mordrog
         {
             "arena", //void
             "moon",
+            "moon2",
             "limbo",
         };
 
