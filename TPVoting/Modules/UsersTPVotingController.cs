@@ -109,7 +109,7 @@ namespace Mordrog
             usersTPVoting.RemoveVoter(user);
         }
 
-        private void Chat_SendBroadcastChat_ChatMessageBase(On.RoR2.Chat.orig_SendBroadcastChat_ChatMessageBase orig, RoR2.Chat.ChatMessageBase message)
+        private void Chat_SendBroadcastChat_ChatMessageBase(On.RoR2.Chat.orig_SendBroadcastChat_ChatMessageBase orig, ChatMessageBase message)
         {
             if (!gameIsStartedWatcher.GameIsStarted)
             {
