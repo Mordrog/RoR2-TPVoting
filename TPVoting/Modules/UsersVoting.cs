@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Mordrog
 {
-    class UsersVoting
+    public class UsersVoting
     {
         private Dictionary<NetworkUserId, bool> usersVotes = new Dictionary<NetworkUserId, bool>();
 

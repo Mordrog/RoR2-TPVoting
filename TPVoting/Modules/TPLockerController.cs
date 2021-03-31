@@ -77,6 +77,10 @@ namespace Mordrog
             }
             else
             {
+                var user = UsersHelper.GetUser(activator);
+                if (usersTPVotingController.Vote(user))
+                    return;
+
                 ChatHelper.PlayersNotReady();
             }
         }
@@ -109,6 +113,10 @@ namespace Mordrog
             }
             else
             {
+                var user = UsersHelper.GetUser(activator);
+                if (usersTPVotingController.Vote(user))
+                    return;
+
                 ChatHelper.PlayersNotReady();
             }
         }

@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Mordrog
 {
-    class UsersTPVotingController : NetworkBehaviour
+    public class UsersTPVotingController : NetworkBehaviour
     {
         private UsersVoting usersTPVoting = new UsersVoting();
         private Timer majorityTPVotingTimer;
@@ -33,6 +33,7 @@ namespace Mordrog
 
             On.RoR2.CharacterMaster.OnBodyDeath += CharacterMaster_OnBodyDeath;
             On.RoR2.Run.OnUserRemoved += Run_OnUserRemoved;
+
             On.RoR2.Chat.SendBroadcastChat_ChatMessageBase += Chat_SendBroadcastChat_ChatMessageBase;
         }
 
@@ -124,19 +125,18 @@ namespace Mordrog
                 {
                     var preparedMessage = userChatMessage.text.ToLower().Trim();
 
-                    if (IsReadyMessage(preparedMessage))
+                    if (CheckIfReadyMessage(preparedMessage))
                     {
                         if (usersTPVoting.Vote(user))
                             return;
                     }
-
                 }
             }
 
             orig(message);
         }
 
-        private bool IsReadyMessage(string message)
+        private bool CheckIfReadyMessage(string message)
         {
             return PluginConfig.PlayerIsReadyMessages.Value.Split(',').Contains(message);
         }
