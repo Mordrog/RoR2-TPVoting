@@ -61,6 +61,11 @@ namespace Mordrog
             }
         }
 
+        public bool CheckIfUserVoted(NetworkUser user)
+        {
+            return usersVotes.TryGetValue(user.id, out bool vote) && vote;
+        }
+
         public bool CheckIfAllUsersVoted()
         {
             return usersVotes.All(kv => kv.Value == true);

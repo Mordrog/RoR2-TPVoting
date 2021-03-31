@@ -31,16 +31,9 @@ namespace Mordrog
             orig(self, sceneName);
 
             currentStage = sceneName;
-            if (CheckIfCurrentStageIsPortalOnly())
-                showInstructionMessageTimer.StartTimer(3);
-
 
             OnCurrentStageChanged?.Invoke();
         }
 
-        private bool CheckIfCurrentStageIsPortalOnly()
-        {
-            return PluginGlobals.PortalOnlyStages.Contains(currentStage);
-        }
     }
 }

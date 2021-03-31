@@ -36,6 +36,16 @@ namespace Mordrog
             On.RoR2.Chat.SendBroadcastChat_ChatMessageBase += Chat_SendBroadcastChat_ChatMessageBase;
         }
 
+        public bool HasUserVoted(NetworkUser user)
+        {
+            return user && usersTPVoting.CheckIfUserVoted(user);
+        }
+
+        public bool Vote(NetworkUser user)
+        {
+            return user && usersTPVoting.Vote(user);
+        }
+
         private void UsersTPVoting_OnUserVoted(NetworkUser user, IReadOnlyDictionary<NetworkUserId, bool> usersVotes)
         {
             ChatHelper.UserIsReady(user.userName, usersVotes.Count(ks => ks.Value == true), usersVotes.Count);

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using EntityStates.LunarTeleporter;
+using MonoMod.RuntimeDetour;
 using RoR2;
 using UnityEngine.Networking;
 
@@ -9,23 +11,27 @@ namespace Mordrog
     class TPLockerController : NetworkBehaviour
     {
         private UsersTPVotingController usersTPVotingController;
-        private PortalInteractorWatcher portalInteractorWatcher;
 
         public bool IsTPUnlocked = false;
-        public bool WasTPInteractedOnceBeforeUnlock = false;
+
+        public delegate void orig_OnInteractionBegin(GenericInteraction self, Interactor activator);
+        public Hook hook_OnInteractionBegin;
+
+        public delegate Interactability orig_GetInteractability(GenericInteraction self, Interactor activator);
+        public Hook hook_GetInteractability;
 
         public void Awake()
         {
             usersTPVotingController = gameObject.AddComponent<UsersTPVotingController>();
-            portalInteractorWatcher = gameObject.AddComponent<PortalInteractorWatcher>();
 
             usersTPVotingController.OnTPVotingRestart += UsersTPVotingController_OnTPVotingRestart;
             usersTPVotingController.OnTPVotingFinish += UsersTPVotingController_OnTPVotingEnd;
 
-            portalInteractorWatcher.OnFoundPortal += PortalInteractorWatcher_OnFoundPortal;
-
-            On.RoR2.TeleporterInteraction.OnInteractionBegin += TeleporterInteraction_OnInteractionBegin;
             On.RoR2.TeleporterInteraction.GetInteractability += TeleporterInteraction_GetInteractability;
+            On.RoR2.TeleporterInteraction.OnInteractionBegin += TeleporterInteraction_OnInteractionBegin;
+
+            hook_GetInteractability = new Hook(typeof(GenericInteraction).GetMethod("RoR2.IInteractable.GetInteractability", BindingFlags.NonPublic | BindingFlags.Instance), typeof(TPLockerController).GetMethod("GenericInteraction_GetInteractability"), this, new HookConfig());
+            hook_OnInteractionBegin = new Hook(typeof(GenericInteraction).GetMethod("RoR2.IInteractable.OnInteractionBegin", BindingFlags.NonPublic | BindingFlags.Instance), typeof(TPLockerController).GetMethod("GenericInteraction_OnInteractionBegin"), this, new HookConfig());
         }
 
         private void UsersTPVotingController_OnTPVotingRestart()
@@ -38,31 +44,22 @@ namespace Mordrog
             UnlockTP();
         }
 
-        private void PortalInteractorWatcher_OnFoundPortal(GenericInteraction portalInteraction)
-        {
-            if (!IsTPUnlocked)
-            {
-                portalInteraction.SetInteractabilityConditionsNotMet();
-            }
-        }
-
         public void UnlockTP()
         {
             IsTPUnlocked = true;
-            portalInteractorWatcher.UnlockAllFoundPortals();
             ChatHelper.TPUnlocked();
         }
 
         public void LockTP()
         {
             IsTPUnlocked = false;
-            WasTPInteractedOnceBeforeUnlock = false;
-            portalInteractorWatcher.LockAllFoundPortals();
         }
 
         private Interactability TeleporterInteraction_GetInteractability(On.RoR2.TeleporterInteraction.orig_GetInteractability orig, TeleporterInteraction self, Interactor activator)
         {
-            if (!WasTPInteractedOnceBeforeUnlock || IsTPUnlocked)
+            var user = UsersHelper.GetUser(activator);
+
+            if (!usersTPVotingController.HasUserVoted(user) || IsTPUnlocked)
             {
                 return orig(self, activator);
             }
@@ -80,7 +77,38 @@ namespace Mordrog
             }
             else
             {
-                WasTPInteractedOnceBeforeUnlock = true;
+                ChatHelper.PlayersNotReady();
+            }
+        }
+
+        public Interactability GenericInteraction_GetInteractability(orig_GetInteractability orig, GenericInteraction self, Interactor activator)
+        {
+            if (!self.name.ToLower().Contains("portal"))
+                orig(self, activator);
+
+            var user = UsersHelper.GetUser(activator);
+
+            if (!usersTPVotingController.HasUserVoted(user) || IsTPUnlocked)
+            {
+                return orig(self, activator);
+            }
+            else
+            {
+                return Interactability.ConditionsNotMet;
+            }
+        }
+
+        public void GenericInteraction_OnInteractionBegin(orig_OnInteractionBegin orig, GenericInteraction self, Interactor activator)
+        {
+            if (!self.name.ToLower().Contains("portal"))
+                orig(self, activator);
+
+            if (IsTPUnlocked)
+            {
+                orig(self, activator);
+            }
+            else
+            {
                 ChatHelper.PlayersNotReady();
             }
         }
