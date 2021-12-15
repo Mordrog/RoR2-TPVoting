@@ -12,6 +12,7 @@ namespace Mordrog
             "moon",
             "moon2",
             "limbo",
+            "outro",
         };
 
         public static List<string> PortalOnlyStages = new List<string>
