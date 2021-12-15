@@ -17,6 +17,11 @@ NOW WORKS WITH PORTALS! (void is intentionally excluded)
 Find my other mods here: https://thunderstore.io/package/Mordrog/
 
 ### Changelog
+#### 1.2.1
+- Fixed issue where players would be auto kicked from dedicated servers if they do not have mod
+- Added "outro" stage to ignored Stages for voting
+- Added new config to let admin decide whenever players should auto vote on death
+
 #### 1.2.0
 - Fix for Anniversary Patch changes
 - Make portals interaction work same as teleporter interaction
