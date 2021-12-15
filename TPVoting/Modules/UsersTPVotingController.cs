@@ -131,7 +131,7 @@ namespace Mordrog
                 return;
             }
 
-            if (self.IsDeadAndOutOfLivesServer())
+            if (PluginConfig.UserAutoVoteOnDeath.Value && self.IsDeadAndOutOfLivesServer())
             {
                 var user = UsersHelper.GetUser(self);
 

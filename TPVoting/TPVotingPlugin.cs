@@ -54,6 +54,13 @@ namespace Mordrog
                 30,
                 "Countdown in seconds to unlock the teleporter when half or most of the players are ready."
             );
+
+            PluginConfig.UserAutoVoteOnDeath = Config.Bind<bool>(
+                "Settings",
+                "UserAutoVoteOnDeath",
+                true,
+                "Should players auto vote tp start when they die."
+            );
         }
     }
 }

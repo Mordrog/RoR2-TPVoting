@@ -10,5 +10,8 @@ namespace Mordrog
 
         public static ConfigEntry<uint>
             MajorityVotesCountdownTime;
+
+        public static ConfigEntry<bool>
+            UserAutoVoteOnDeath;
     }
 }
