@@ -1,4 +1,6 @@
 ﻿using BepInEx;
+using R2API.Utils;
+using RoR2;
 
 namespace Mordrog
 {
@@ -10,6 +12,8 @@ namespace Mordrog
         public const string ModName = "TPVoting";
         public const string ModGuid = "com.Mordrog.TPVoting";
 
+        public TPLockerController TPLockerController { get; private set; }
+
         public TPVotingPlugin()
         {
             InitConfig();
@@ -17,7 +21,22 @@ namespace Mordrog
 
         public void Awake()
         {
-            base.gameObject.AddComponent<TPLockerController>();
+            On.RoR2.Run.Awake += Run_Awake;
+            On.RoR2.Run.OnDestroy += Run_OnDestroy;
+        }
+
+        private void Run_Awake(On.RoR2.Run.orig_Awake orig, Run self)
+        {
+            TPLockerController = base.gameObject.AddComponent<TPLockerController>();
+
+            orig(self);
+        }
+
+        private void Run_OnDestroy(On.RoR2.Run.orig_OnDestroy orig, Run self)
+        {
+            Destroy(TPLockerController);
+
+            orig(self);
         }
 
         private void InitConfig()

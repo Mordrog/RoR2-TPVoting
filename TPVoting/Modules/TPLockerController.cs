@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using EntityStates.LunarTeleporter;
@@ -8,11 +9,11 @@ using UnityEngine.Networking;
 
 namespace Mordrog
 {
-    class TPLockerController : NetworkBehaviour
+    public class TPLockerController : NetworkBehaviour
     {
         private UsersTPVotingController usersTPVotingController;
 
-        public bool IsTPUnlocked = false;
+        public bool IsTPUnlocked = true;
 
         public delegate void orig_OnInteractionBegin(GenericInteraction self, Interactor activator);
         public Hook hook_OnInteractionBegin;
@@ -24,8 +25,8 @@ namespace Mordrog
         {
             usersTPVotingController = gameObject.AddComponent<UsersTPVotingController>();
 
-            usersTPVotingController.OnTPVotingRestart += UsersTPVotingController_OnTPVotingRestart;
-            usersTPVotingController.OnTPVotingFinish += UsersTPVotingController_OnTPVotingEnd;
+            usersTPVotingController.OnTPVotingStarted += UsersTPVotingController_OnTPVotingStarted;
+            usersTPVotingController.OnTPVotingEnded += UsersTPVotingController_OnTPVotingEnded;
 
             On.RoR2.TeleporterInteraction.GetInteractability += TeleporterInteraction_GetInteractability;
             On.RoR2.TeleporterInteraction.OnInteractionBegin += TeleporterInteraction_OnInteractionBegin;
@@ -34,25 +35,37 @@ namespace Mordrog
             hook_OnInteractionBegin = new Hook(typeof(GenericInteraction).GetMethod("RoR2.IInteractable.OnInteractionBegin", BindingFlags.NonPublic | BindingFlags.Instance), typeof(TPLockerController).GetMethod("GenericInteraction_OnInteractionBegin"), this, new HookConfig());
         }
 
-        private void UsersTPVotingController_OnTPVotingRestart()
+        public void OnDestroy()
         {
-            LockTP();
+            usersTPVotingController.OnTPVotingStarted -= UsersTPVotingController_OnTPVotingStarted;
+            usersTPVotingController.OnTPVotingEnded -= UsersTPVotingController_OnTPVotingEnded;
+
+            On.RoR2.TeleporterInteraction.GetInteractability -= TeleporterInteraction_GetInteractability;
+            On.RoR2.TeleporterInteraction.OnInteractionBegin -= TeleporterInteraction_OnInteractionBegin;
+
+            hook_GetInteractability.Dispose();
+            hook_OnInteractionBegin.Dispose();
+
+            Destroy(usersTPVotingController);
         }
 
-        private void UsersTPVotingController_OnTPVotingEnd()
+        private void UsersTPVotingController_OnTPVotingStarted()
         {
-            UnlockTP();
+            IsTPUnlocked = false;
+
+            StartCoroutine(Show());
+
+            IEnumerator Show()
+            {
+                yield return new UnityEngine.WaitForSeconds(3);
+                ChatHelper.VotingInstruction();
+            }
         }
 
-        public void UnlockTP()
+        private void UsersTPVotingController_OnTPVotingEnded()
         {
             IsTPUnlocked = true;
             ChatHelper.TPUnlocked();
-        }
-
-        public void LockTP()
-        {
-            IsTPUnlocked = false;
         }
 
         private Interactability TeleporterInteraction_GetInteractability(On.RoR2.TeleporterInteraction.orig_GetInteractability orig, TeleporterInteraction self, Interactor activator)
