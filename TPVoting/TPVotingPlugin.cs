@@ -28,16 +28,23 @@ namespace Mordrog
 
         private void Run_Awake(On.RoR2.Run.orig_Awake orig, Run self)
         {
+            orig(self);
+
+            if (PluginConfig.IgnoredGameModes.Value.Contains(GameModeCatalog.GetGameModeName(self.gameModeIndex)))
+                return;
+
             TPLockerController = base.gameObject.AddComponent<TPLockerController>();
 
-            orig(self);
         }
 
         private void Run_OnDestroy(On.RoR2.Run.orig_OnDestroy orig, Run self)
         {
-            Destroy(TPLockerController);
-
             orig(self);
+
+            if (PluginConfig.IgnoredGameModes.Value.Contains(GameModeCatalog.GetGameModeName(self.gameModeIndex)))
+                return;
+
+            Destroy(TPLockerController);
         }
 
         private void InitConfig()
@@ -47,6 +54,13 @@ namespace Mordrog
                 "PlayerIsReadyMessages",
                 "r,rdy,ready",
                 "The message the player has to write in the chat to confirm they are ready. Values must be separated by comma."
+            );
+
+            PluginConfig.IgnoredGameModes = Config.Bind<string>(
+                "Settings",
+                "IgnoredGameModes",
+                "InfiniteTowerRun",
+                "Gamemode in which tp voting should not work."
             );
 
             PluginConfig.MajorityVotesCountdownTime = Config.Bind<uint>(

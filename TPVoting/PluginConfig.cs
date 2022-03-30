@@ -6,7 +6,8 @@ namespace Mordrog
     class PluginConfig
     {
         public static ConfigEntry<string>
-            PlayerIsReadyMessages;
+            PlayerIsReadyMessages,
+            IgnoredGameModes;
 
         public static ConfigEntry<uint>
             MajorityVotesCountdownTime;
