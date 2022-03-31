@@ -10,13 +10,19 @@ NOW WORKS WITH PORTALS! (void is intentionally excluded)
 | Setting                       | Default Value       |
 | :---------------------------- | :-----------------: |
 | PlayerIsReadyMessages         |       "r,rdy,ready" |
+| IgnoredGameModes              |  "IgnoredGameModes" |
 | MajorityVotesCountdownTime    |                  30 |
+| UserAutoVoteOnDeath           |                true |
 
 ## More
 
 Find my other mods here: https://thunderstore.io/package/Mordrog/
 
 ### Changelog
+#### 1.2.2
+- Fix for Survivors of the Void changes
+- Added option to turn off voting on selected game modes
+
 #### 1.2.1
 - Fixed issue where players would be auto kicked from dedicated servers if they do not have mod
 - Added "outro" stage to ignored Stages for voting
