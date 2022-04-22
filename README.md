@@ -19,6 +19,9 @@ NOW WORKS WITH PORTALS! (void is intentionally excluded)
 Find my other mods here: https://thunderstore.io/package/Mordrog/
 
 ### Changelog
+#### 1.2.3
+- Update manifest + rebuild on new patch
+
 #### 1.2.2
 - Fix for Survivors of the Void changes
 - Added option to turn off voting on selected game modes
